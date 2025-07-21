@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String       @id @default(uuid())
+  email       String       @unique
+  name        String?
+  createdAt   DateTime     @default(now())
+  bonuses     Bonus[]
+  predictions Prediction[]
+}
+
+model Fixture {
+  id          String       @id @default(uuid())
+  homeTeam    String
+  awayTeam    String
+  matchDate   DateTime
+  createdAt   DateTime     @default(now())
+  predictions Prediction[]
+  result      Result?
+}
+
+model Prediction {
+  id        String   @id @default(uuid())
+  userId    String
+  fixtureId String
+  homeScore Int
+  awayScore Int
+
+  user      User     @relation(fields: [userId], references: [id])
+  fixture   Fixture  @relation(fields: [fixtureId], references: [id])
+
+  @@unique([userId, fixtureId])
+}
+
+
+model Result {
+  id        String   @id @default(uuid())
+  fixtureId String   @unique
+  homeScore Int
+  awayScore Int
+  createdAt DateTime @default(now())
+  fixture   Fixture  @relation(fields: [fixtureId], references: [id])
+}
+
+model Bonus {
+  id        String    @id @default(uuid())
+  userId    String
+  type      String
+  usedOn    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id])
+}
