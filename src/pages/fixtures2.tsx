@@ -4,6 +4,14 @@ import { supabase } from "@/lib/supabaseClient";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
+type Fixture = {
+  id: string;
+  homeTeam: string;
+  awayTeam: string;
+  matchDate: string;
+};
+
+
 export default function FixturesPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
