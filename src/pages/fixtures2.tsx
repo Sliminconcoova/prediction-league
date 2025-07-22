@@ -123,8 +123,8 @@ export default function FixturesPage() {
                         onClick={() =>
                           handleSave(
                             fixture.id,
-                            Number(document.getElementById(`${fixture.id}-homeScore`).value),
-                            Number(document.getElementById(`${fixture.id}-awayScore`).value)
+                            Number((document.getElementById(`${fixture.id}-homeScore`) as HTMLInputElement).value),
+                            Number((document.getElementById(`${fixture.id}-awayScore`) as HTMLInputElement).value),
                           )
                         }
                         className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700"
