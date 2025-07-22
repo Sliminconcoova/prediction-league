@@ -4,3 +4,4 @@ node_modules
 .env.local
 /src/generated/prisma
 /src/pages/api/results/
+/src/pages/fixtures.tsx
