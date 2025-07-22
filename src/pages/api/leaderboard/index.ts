@@ -13,7 +13,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           predictions: {
             select: {
               //points: true,
-              predictions: true
             },
           },
         },
