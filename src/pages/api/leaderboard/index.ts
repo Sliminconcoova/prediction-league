@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }));
 
       // Sort descending by totalPoints
-      formatted.sort((a, b) => b.totalPoints - a.totalPoints);
+      //formatted.sort((a, b) => b.totalPoints - a.totalPoints);
 
       return res.status(200).json(formatted);
     } catch (error) {
