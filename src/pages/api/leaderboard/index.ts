@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         id: user.id,
         name: user.name,
         email: user.email,
-        totalPoints: user.predictions.reduce((sum, p) => sum + p.points, 0),
+        //totalPoints: user.predictions.reduce((sum, p) => sum + p.points, 0),
       }));
 
       // Sort descending by totalPoints
