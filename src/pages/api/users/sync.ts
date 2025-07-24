@@ -3,6 +3,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import prisma from '@/lib/prisma'
+import { Role } from '@prisma/client' // ✅ Import Role enum directly
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const supabase = createServerSupabaseClient({ req, res })
@@ -27,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           id: user.id,
           email: user.email || '',
           name: user.user_metadata?.full_name || '',
-          role: 'PLAYER', // Default role
+          role: Role.Player, // ✅ Use enum safely
         },
       })
     }
