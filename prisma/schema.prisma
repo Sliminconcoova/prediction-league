@@ -16,6 +16,7 @@ model User {
   createdAt   DateTime     @default(now())
   bonuses     Bonus[]
   predictions Prediction[]
+  role        Role        @default(Player)
 
   @@schema("public")
 }
@@ -63,6 +64,13 @@ model Bonus {
   usedOn    DateTime?
   createdAt DateTime  @default(now())
   user      User      @relation(fields: [userId], references: [id])
+
+  @@schema("public")
+}
+
+enum Role {
+  Admin
+  Player
 
   @@schema("public")
 }
