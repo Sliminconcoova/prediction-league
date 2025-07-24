@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           id: user.id,
           email: user.email || '',
           name: user.user_metadata?.full_name || '',
-          role: Role.Player, // ✅ Use enum safely
+          role: 'Player', // ✅ Use enum safely
         },
       })
     }
