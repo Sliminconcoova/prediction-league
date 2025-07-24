@@ -1,42 +1,40 @@
-// /pages/api/user/sync.ts
-import type { NextApiRequest, NextApiResponse } from 'next';
+// src/pages/api/users/sync.ts
 
-import prisma from '@/lib/prisma';
-
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY! // Must be set in Vercel env vars
-);
-
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import prisma from '@/lib/prisma'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const token = req.headers.authorization?.replace('Bearer ', '');
+  const supabase = createServerSupabaseClient({ req, res })
 
-  if (!token) return res.status(401).json({ error: 'Unauthorized' });
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
 
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  if (error || !user) return res.status(401).json({ error: 'Invalid user' });
-
-  const { id, email } = user;
+  if (error || !user) {
+    return res.status(401).json({ error: 'Not authenticated' })
+  }
 
   try {
-    const existing = await prisma.user.findUnique({ where: { id } });
+    const existingUser = await prisma.user.findUnique({
+      where: { id: user.id },
+    })
 
-    if (!existing) {
+    if (!existingUser) {
       await prisma.user.create({
         data: {
-          id,
-          email: email || '',
-          //role: 'PLAYER',
+          id: user.id,
+          email: user.email || '',
+          name: user.user_metadata?.full_name || '',
+          role: 'PLAYER', // Default role
         },
-      });
+      })
     }
 
-    res.status(200).json({ message: 'User synced' });
+    return res.status(200).json({ message: 'User synced successfully' })
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error syncing user' });
+    console.error('[sync.ts] Error syncing user:', err)
+    return res.status(500).json({ error: 'Internal server error' })
   }
 }
